@@ -61,9 +61,11 @@ function doOperation(op) {
     }
 
     if (op.toString().length==1 && ((op >= "0" && op <= "9") || op == localeHelper.decimalPoint()) ) {
-        if (display.text.toString().length >= 14)
-            return; // No arbitrary length numbers
         if (lastOp.toString().length == 1 && ((lastOp >= "0" && lastOp <= "9") || lastOp == localeHelper.decimalPoint()) ) {
+            // don't append to number if it's too long
+            if (display.text.toString().length >= 14)
+                return;
+
             display.text = display.text + op.toString()
         } else {
             display.text = (op == localeHelper.decimalPoint() ? "0":"") + op
