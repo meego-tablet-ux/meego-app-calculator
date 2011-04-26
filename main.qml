@@ -23,10 +23,10 @@
  */
 
 import Qt 4.7
-import MeeGo.Labs.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 import "calculator.js" as CalcEngine
 
-Window {
+Labs.Window {
     id: window
 
     backgroundColor: "#282828"
@@ -47,14 +47,14 @@ Window {
     applicationPage: page
 
     resources: [
-        LocaleHelper {
+        Labs.LocaleHelper {
             id: localeHelper
         }
     ]
 
     Component {
         id: page
-        ApplicationPage {
+        Labs.ApplicationPage {
         id: appPage
         title: qsTr("Calculator")
         Item {
