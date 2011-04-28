@@ -114,11 +114,11 @@ function doOperation(op) {
     } else if (op == qsTr("mc")) {
         memory = 0;
     } else if (op == qsTr("m+")) {
-        memory += display.text.valueOf()
+        memory += Number(display.text)
     } else if (op == qsTr("mr")) {
         display.text = memory.toString()
     } else if (op == qsTr("m-")) {
-        memory = display.text.valueOf()
+        memory = Number(display.text)
     } else if (op == leftArrow) {
         display.text = display.text.toString().slice(0, -1)
     } else if (op == qsTr("C")) {
