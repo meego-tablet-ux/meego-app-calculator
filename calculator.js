@@ -26,6 +26,7 @@ var curVal = 0
 var memory = 0
 var lastOp = ""
 var timer = 0
+var errorFlag = false
 
 function disabled(op) {
     if (op == localeHelper.decimalPoint() && display.text.toString().search("\\" + localeHelper.decimalPoint()) != -1) {
@@ -33,17 +34,17 @@ function disabled(op) {
         if (lastOp.toString().length == 1 && ((lastOp >= "0" && lastOp <= "9") || lastOp == localeHelper.decimalPoint())) {
             return true
         }
-        else {
-            return false
-        }
     } else if (op == squareRoot &&  display.text.toString().search(/-/) != -1) {
         return true
-    } else {
-        return false
+    } else if (errorFlag) {
+        if (op != "C" && op != "AC") // The display should stay at "Infinity" unless C or AC is pressed
+            return true
     }
+    return false
 }
 
 function correctText() {
+    errorFlag = true
     // correct the output to i18nable string when text
     if ((display.text == "Infinity") || (display.text == "inf")) {
         display.text = qsTr("Infinity")
@@ -51,8 +52,12 @@ function correctText() {
         display.text = qsTr("-Infinity")
     } else if ((display.text == "NaN") || (display.text == "nan")) {
         display.text = qsTr("Error")
+    } else {
+        display.text = display.text.replace(".", localeHelper.decimalPoint())
+        errorFlag = false
     }
-    display.text = display.text.replace(".", localeHelper.decimalPoint())
+    if (errorFlag)
+        display.currentOperation.text = ""
 }
 
 // Perform any input action (number, decimal point, +/- or left arrow)
@@ -70,16 +75,14 @@ function doInputOperation(op) {
         }
         lastOp = op
         correctText()
-    } else if (op == plusminus) {
-        display.text = (Number(display.text) * -1).toString()
     } else if (op == leftArrow) {
-        if (display.text.toString().length > 1) {
-            display.text = display.text.toString().slice(0, -1)
-        } else if (display.text != "0") {
+        var length = display.text.toString().length
+        if (length == 1 || length == 2 && display.text.toString().charAt(0) == '-' || length == 3 && display.text == ("-0" + localeHelper.decimalPoint())) {
             display.text = "0"
+        } else {
+            display.text = display.text.toString().slice(0, -1)
         }
     } else {
-        display.text = display.text.replace(localeHelper.decimalPoint(), ".") // Prepare for calculation
         ok = false
     }
     return ok
@@ -98,6 +101,8 @@ function doSingleOperation(op) {
         display.text = (Math.floor(display.text.valueOf())).toString()
     } else if (op == squareRoot) {
         display.text = (Math.sqrt(display.text.valueOf())).toString()
+    } else if (op == plusminus) {
+        display.text = (Number(display.text) * -1).toString()
     } else {
         ok = false
     }
@@ -157,7 +162,6 @@ function doMemoryOperation(op) {
         memory = Number(display.text)
     } else if (op == qsTr("C")) {
         display.text = "0"
-        display.currentOperation.text = ""
     } else if (op == qsTr("AC")) {
         curVal = 0
         memory = 0
@@ -179,13 +183,19 @@ function doOperation(op) {
         return
     }
 
-    if (!doInputOperation(op) && !doSingleOperation(op) && !doMemoryOperation(op) && !doDoubleOperation(op)) {
-        if (op == rotateLeft) {
-            main.state = 'rotated'
-        } else if (op == rotateRight) {
-            main.state = ''
-        } else {
-            console.log("Calculator.js: doOperation - Undefined operation: " + op)
+    if (errorFlag)
+        errorFlag = false
+
+    if (!doInputOperation(op)) {
+        display.text = display.text.replace(localeHelper.decimalPoint(), ".")               // Prepare for calculation
+        if (!doSingleOperation(op) && !doMemoryOperation(op) && !doDoubleOperation(op)) {
+            if (op == rotateLeft) {
+                main.state = 'rotated'
+            } else if (op == rotateRight) {
+                main.state = ''
+            } else {
+                console.log("Calculator.js: doOperation - Undefined operation: " + op)
+            }
         }
     }
 }
