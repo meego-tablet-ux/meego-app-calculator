@@ -64,7 +64,7 @@ function doInputOperation(op) {
             if (display.text.toString().length >= 14)
                 return ok;
 
-            display.text = display.text + op.toString()
+            display.text = (display.text == "0" && op != localeHelper.decimalPoint() ? op : display.text + op.toString())
         } else {
             display.text = (op == localeHelper.decimalPoint() ? "0":"") + op
         }
@@ -75,7 +75,7 @@ function doInputOperation(op) {
     } else if (op == leftArrow) {
         display.text = display.text.toString().slice(0, -1)
     } else {
-        display.text = display.text.replace(localeHelper.decimalPoint(), ".")
+        display.text = display.text.replace(localeHelper.decimalPoint(), ".") // Prepare for calculation
         ok = false
     }
     return ok
