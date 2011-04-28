@@ -73,7 +73,11 @@ function doInputOperation(op) {
     } else if (op == plusminus) {
         display.text = (Number(display.text) * -1).toString()
     } else if (op == leftArrow) {
-        display.text = display.text.toString().slice(0, -1)
+        if (display.text.toString().length > 1) {
+            display.text = display.text.toString().slice(0, -1)
+        } else if (display.text != "0") {
+            display.text = "0"
+        }
     } else {
         display.text = display.text.replace(localeHelper.decimalPoint(), ".") // Prepare for calculation
         ok = false
