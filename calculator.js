@@ -55,16 +55,14 @@ function correctText() {
     display.text = display.text.replace(".", localeHelper.decimalPoint())
 }
 
-function doOperation(op) {
-    if (disabled(op)) {
-        return
-    }
-
+// Perform any input action (number, decimal point, +/- or left arrow)
+function doInputOperation(op) {
+    var ok = true
     if (op.toString().length==1 && ((op >= "0" && op <= "9") || op == localeHelper.decimalPoint()) ) {
         if (lastOp.toString().length == 1 && ((lastOp >= "0" && lastOp <= "9") || lastOp == localeHelper.decimalPoint()) ) {
             // don't append to number if it's too long
             if (display.text.toString().length >= 14)
-                return;
+                return ok;
 
             display.text = display.text + op.toString()
         } else {
@@ -72,33 +70,20 @@ function doOperation(op) {
         }
         lastOp = op
         correctText()
-        return
+    } else if (op == plusminus) {
+        display.text = (Number(display.text) * -1).toString()
+    } else if (op == leftArrow) {
+        display.text = display.text.toString().slice(0, -1)
+    } else {
+        display.text = display.text.replace(localeHelper.decimalPoint(), ".")
+        ok = false
     }
-    lastOp = op
+    return ok
+}
 
-    display.text = display.text.replace(localeHelper.decimalPoint(), ".")
-
-    if (display.currentOperation.text == "+") {
-        display.text = Number(display.text.valueOf()) + Number(curVal.valueOf())
-    } else if (display.currentOperation.text == "-") {
-        display.text = Number(curVal) - Number(display.text.valueOf())
-    } else if (display.currentOperation.text == multiplication) {
-        display.text = Number(curVal) * Number(display.text.valueOf())
-    } else if (display.currentOperation.text == division) {
-        display.text = Number(Number(curVal) / Number(display.text.valueOf())).toString()
-    } else if (display.currentOperation.text == "=") {
-    }
-
-    if (op == "+" || op == "-" || op == multiplication || op == division) {
-        display.currentOperation.text = op
-        curVal = display.text.valueOf()
-        correctText()
-        return
-    }
-
-    curVal = 0
-    display.currentOperation.text = ""
-
+// Perform any operation with single operand like abs, sqrt, 1/x and so on
+function doSingleOperation(op) {
+    var ok = true
     if (op == "1/x") {
         display.text = (1 / display.text.valueOf()).toString()
     } else if (op == "x^2") {
@@ -107,11 +92,58 @@ function doOperation(op) {
         display.text = (Math.abs(display.text.valueOf())).toString()
     } else if (op == "Int") {
         display.text = (Math.floor(display.text.valueOf())).toString()
-    } else if (op == plusminus) {
-        display.text = (display.text.valueOf() * -1).toString()
     } else if (op == squareRoot) {
         display.text = (Math.sqrt(display.text.valueOf())).toString()
-    } else if (op == qsTr("mc")) {
+    } else {
+        ok = false
+    }
+    if (ok) {
+        lastOp = op
+        correctText()
+    }
+    return ok
+}
+
+// Perform any operation with two operands like +, -, * or /
+function doDoubleOperation(op) {
+    var arithmeticOperations = ["+", "-", multiplication, division, "="]
+
+    var operationIndex = arithmeticOperations.indexOf(op)
+    if (operationIndex < 0)
+        return false
+
+    var curOperationIndex = arithmeticOperations.indexOf(display.currentOperation.text)
+    switch (curOperationIndex) {
+    case 0:                                                                         // +
+        display.text = Number(display.text.valueOf()) + Number(curVal.valueOf())
+        break
+    case 1:                                                                         // -
+        display.text = Number(curVal) - Number(display.text.valueOf())
+        break
+    case 2:                                                                         // multiplication
+        display.text = Number(curVal) * Number(display.text.valueOf())
+        break
+    case 3:                                                                         // division
+        display.text = Number(Number(curVal) / Number(display.text.valueOf())).toString()
+        break
+    }
+
+    if (operationIndex != arithmeticOperations.indexOf("=")) { // op != "="
+        curVal = display.text.valueOf()
+        display.currentOperation.text = op
+    } else {                                                  // op == "="
+        curVal = 0
+        display.currentOperation.text = ""
+    }
+    lastOp = op
+    correctText()
+
+    return true
+}
+
+function doMemoryOperation(op) {
+    var ok = true
+    if (op == qsTr("mc")) {
         memory = 0;
     } else if (op == qsTr("m+")) {
         memory += Number(display.text)
@@ -119,21 +151,37 @@ function doOperation(op) {
         display.text = memory.toString()
     } else if (op == qsTr("m-")) {
         memory = Number(display.text)
-    } else if (op == leftArrow) {
-        display.text = display.text.toString().slice(0, -1)
     } else if (op == qsTr("C")) {
         display.text = "0"
+        display.currentOperation.text = ""
     } else if (op == qsTr("AC")) {
         curVal = 0
         memory = 0
         lastOp = ""
-        display.text ="0"
+        display.text = "0"
+        display.currentOperation.text = ""
+    } else {
+        ok = false
+    }
+    if (ok) {
+        lastOp = op
+        correctText()
+    }
+    return ok
+}
+
+function doOperation(op) {
+    if (disabled(op)) {
+        return
     }
 
-    if (op == rotateLeft)
-        main.state = 'rotated'
-    if (op == rotateRight)
-        main.state = ''
-
-    correctText()
+    if (!doInputOperation(op) && !doSingleOperation(op) && !doMemoryOperation(op) && !doDoubleOperation(op)) {
+        if (op == rotateLeft) {
+            main.state = 'rotated'
+        } else if (op == rotateRight) {
+            main.state = ''
+        } else {
+            console.log("Calculator.js: doOperation - Undefined operation: " + op)
+        }
+    }
 }
