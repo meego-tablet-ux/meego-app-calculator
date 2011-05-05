@@ -75,6 +75,11 @@ function doInputOperation(op) {
         }
         lastOp = op
         correctText()
+    } else if (op == plusminus) {
+        if (display.text.toString().charAt(0) == '-')
+            display.text = display.text.toString().substring(1)
+        else if (display.text != "0")
+            display.text = "-" + display.text
     } else if (op == leftArrow) {
         var length = display.text.toString().length
         if (length == 1 || length == 2 && display.text.toString().charAt(0) == '-' || length == 3 && display.text == ("-0" + localeHelper.decimalPoint())) {
@@ -101,8 +106,6 @@ function doSingleOperation(op) {
         display.text = (Math.floor(display.text.valueOf())).toString()
     } else if (op == squareRoot) {
         display.text = (Math.sqrt(display.text.valueOf())).toString()
-    } else if (op == plusminus) {
-        display.text = (Number(display.text) * -1).toString()
     } else {
         ok = false
     }

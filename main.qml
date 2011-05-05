@@ -24,13 +24,11 @@
 
 import Qt 4.7
 import MeeGo.Labs.Components 0.1 as Labs
+import MeeGo.Components 0.1
 import "calculator.js" as CalcEngine
 
 Labs.Window {
     id: window
-
-    backgroundColor: "#282828"
-    showsearch: false
 
     property string rotateLeft: "\u2939"
     property string rotateRight: "\u2935"
@@ -44,22 +42,23 @@ Labs.Window {
 
     property variant display
 
-    applicationPage: page
-
     resources: [
         Labs.LocaleHelper {
             id: localeHelper
         }
     ]
 
+    Component.onCompleted: {
+        switchBook(page)
+    }
+
     Component {
         id: page
-        Labs.ApplicationPage {
+        AppPage {
         id: appPage
-        title: qsTr("Calculator")
+        pageTitle: qsTr("Calculator")
         Item {
             id: main
-            parent: appPage.content
             anchors.fill: parent
 
             Component.onCompleted: window.display = display
