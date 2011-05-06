@@ -34,8 +34,6 @@ function disabled(op) {
         if (lastOp.toString().length == 1 && ((lastOp >= "0" && lastOp <= "9") || lastOp == localeHelper.decimalPoint())) {
             return true
         }
-    } else if (op == squareRoot &&  display.text.toString().search(/-/) != -1) {
-        return true
     } else if (errorFlag) {
         if (op != "C" && op != "AC") // The display should stay at "Infinity" unless C or AC is pressed
             return true
