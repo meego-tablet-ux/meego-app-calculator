@@ -28,6 +28,10 @@ var lastOp = ""
 var timer = 0
 var errorFlag = false
 
+function isDigitOrDecimalPoint(str) {
+    return (str.toString().length == 1 && ((str >= "0" && str <= "9") || str == localeHelper.decimalPoint()))
+}
+
 function indexOfArithmeticOperation(op) {
     var arithmeticOperations = ["+", "-", multiplication, division, "="]
     return arithmeticOperations.indexOf(op)
@@ -36,7 +40,7 @@ function indexOfArithmeticOperation(op) {
 function disabled(op) {
     if (op == localeHelper.decimalPoint() && display.text.toString().search("\\" + localeHelper.decimalPoint()) != -1) {
         // if we're starting a new number, allow it
-        if (lastOp.toString().length == 1 && ((lastOp >= "0" && lastOp <= "9") || lastOp == localeHelper.decimalPoint())) {
+        if (isDigitOrDecimalPoint(lastOp)) {
             return true
         }
     } else if (errorFlag) {
@@ -66,8 +70,8 @@ function correctText() {
 // Perform any input action (number, decimal point, +/- or left arrow)
 function doInputOperation(op) {
     var ok = true
-    if (op.toString().length==1 && ((op >= "0" && op <= "9") || op == localeHelper.decimalPoint()) ) {
-        if (lastOp.toString().length == 1 && ((lastOp >= "0" && lastOp <= "9") || lastOp == localeHelper.decimalPoint()) ) {
+    if (isDigitOrDecimalPoint(op)) {
+        if (isDigitOrDecimalPoint(lastOp)) {
             // don't append to number if it's too long
             if (display.text.toString().length >= 14)
                 return ok;
@@ -88,9 +92,9 @@ function doInputOperation(op) {
             else if (display.text != "0")
                 display.text = "-" + display.text
         }
-    } else if (op == leftArrow) {
-        var length = display.text.toString().length
-        if (length == 1 || length == 2 && display.text.toString().charAt(0) == '-' || length == 3 && display.text == ("-0" + localeHelper.decimalPoint())) {
+    } else if (op == leftArrow && (isDigitOrDecimalPoint(lastOp) || lastOp == plusminus)) {  // allow to edit the number if the last operation
+        var length = display.text.toString().length                                          // is a digit, +/- or the decimal point only
+        if (length == 1 || length == 2 && display.text.toString().charAt(0) == '-' || display.text == ("-0" + localeHelper.decimalPoint())) {
             display.text = "0"
         } else {
             display.text = display.text.toString().slice(0, -1)
