@@ -27,7 +27,7 @@ import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.Components 0.1
 import "calculator.js" as CalcEngine
 
-Labs.Window {
+Window {
     id: window
 
     property string rotateLeft: "\u2939"
