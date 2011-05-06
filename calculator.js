@@ -172,7 +172,7 @@ function doMemoryOperation(op) {
     } else if (op == qsTr("mr")) {
         display.text = memory.toString()
     } else if (op == qsTr("m-")) {
-        memory = Number(display.text)
+        memory -= Number(display.text)
     } else if (op == qsTr("C")) {
         display.text = "0"
     } else if (op == qsTr("AC")) {
