@@ -28,6 +28,11 @@ var lastOp = ""
 var timer = 0
 var errorFlag = false
 
+function indexOfArithmeticOperation(op) {
+    var arithmeticOperations = ["+", "-", multiplication, division, "="]
+    return arithmeticOperations.indexOf(op)
+}
+
 function disabled(op) {
     if (op == localeHelper.decimalPoint() && display.text.toString().search("\\" + localeHelper.decimalPoint()) != -1) {
         // if we're starting a new number, allow it
@@ -74,10 +79,15 @@ function doInputOperation(op) {
         lastOp = op
         correctText()
     } else if (op == plusminus) {
-        if (display.text.toString().charAt(0) == '-')
-            display.text = display.text.toString().substring(1)
-        else if (display.text != "0")
-            display.text = "-" + display.text
+        var index = indexOfArithmeticOperation(lastOp)
+        if (index >= 0 && index <= 3) {                             // do not allow to change the sign of the number if the last operation is +, -, * or /
+            display.text = "0"
+        } else {
+            if (display.text.toString().charAt(0) == '-')
+                display.text = display.text.toString().substring(1)
+            else if (display.text != "0")
+                display.text = "-" + display.text
+        }
     } else if (op == leftArrow) {
         var length = display.text.toString().length
         if (length == 1 || length == 2 && display.text.toString().charAt(0) == '-' || length == 3 && display.text == ("-0" + localeHelper.decimalPoint())) {
@@ -116,13 +126,11 @@ function doSingleOperation(op) {
 
 // Perform any operation with two operands like +, -, * or /
 function doDoubleOperation(op) {
-    var arithmeticOperations = ["+", "-", multiplication, division, "="]
-
-    var operationIndex = arithmeticOperations.indexOf(op)
+    var operationIndex = indexOfArithmeticOperation(op)
     if (operationIndex < 0)
         return false
 
-    var curOperationIndex = arithmeticOperations.indexOf(display.currentOperation.text)
+    var curOperationIndex = indexOfArithmeticOperation(display.currentOperation.text)
     switch (curOperationIndex) {
     case 0:                                                                         // +
         display.text = Number(display.text.valueOf()) + Number(curVal.valueOf())
