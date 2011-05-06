@@ -134,28 +134,30 @@ function doDoubleOperation(op) {
     if (operationIndex < 0)
         return false
 
-    var curOperationIndex = indexOfArithmeticOperation(display.currentOperation.text)
-    switch (curOperationIndex) {
-    case 0:                                                                         // +
-        display.text = Number(display.text.valueOf()) + Number(curVal.valueOf())
-        break
-    case 1:                                                                         // -
-        display.text = Number(curVal) - Number(display.text.valueOf())
-        break
-    case 2:                                                                         // multiplication
-        display.text = Number(curVal) * Number(display.text.valueOf())
-        break
-    case 3:                                                                         // division
-        display.text = Number(Number(curVal) / Number(display.text.valueOf())).toString()
-        break
+    if (indexOfArithmeticOperation(lastOp) < 0) {                                       // It supports to let users change Calculation symbols
+        var curOperationIndex = indexOfArithmeticOperation(display.currentOperation.text)
+        switch (curOperationIndex) {
+        case 0:                                                                         // +
+            display.text = Number(display.text.valueOf()) + Number(curVal.valueOf())
+            break
+        case 1:                                                                         // -
+            display.text = Number(curVal) - Number(display.text.valueOf())
+            break
+        case 2:                                                                         // multiplication
+            display.text = Number(curVal) * Number(display.text.valueOf())
+            break
+        case 3:                                                                         // division
+            display.text = Number(Number(curVal) / Number(display.text.valueOf())).toString()
+            break
+        }
     }
 
-    if (operationIndex != arithmeticOperations.indexOf("=")) { // op != "="
-        curVal = display.text.valueOf()
-        display.currentOperation.text = op
-    } else {                                                  // op == "="
+    if (operationIndex == 4) {                                                      // operation == '='
         curVal = 0
         display.currentOperation.text = ""
+    } else {                                                                        // operation == +, -, * or /
+        curVal = display.text.valueOf()
+        display.currentOperation.text = op
     }
     lastOp = op
     correctText()
