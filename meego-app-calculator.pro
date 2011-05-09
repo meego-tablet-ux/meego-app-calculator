@@ -1,4 +1,4 @@
-VERSION = 0.2.3
+VERSION = 0.2.4
 TARGET = meego-app-calculator
 TEMPLATE = subdirs
 
