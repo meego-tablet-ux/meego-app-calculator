@@ -76,87 +76,87 @@ Window {
     Component {
         id: page
         AppPage {
-        id: appPage
-        pageTitle: qsTr("Calculator")
-        Item {
-            id: main
-            anchors.fill: parent
+            id: appPage
+            pageTitle: qsTr("Calculator")
+            Item {
+                id: main
+                anchors.fill: parent
 
-            Component.onCompleted: {
-                window.display = display
-                display.text = calcState.value("displayText", "")
-                display.currentOperation.text = calcState.value("displayCurrentOperation", "")
-            }
-
-            Column {
-                id: box; spacing: 8
-                anchors {
-                    top: parent.top
-                    bottom: parent.bottom
-                    bottomMargin: 6
-                    left: parent.left
-                    leftMargin: 6
-                    right: parent.right
-                    rightMargin: 6
-                }
-
-                Row {
-                    Display { id: display; width: box.width; height: 64 }
+                Component.onCompleted: {
+                    window.display = display
+                    display.text = calcState.value("displayText", "")
+                    display.currentOperation.text = calcState.value("displayCurrentOperation", "")
                 }
 
                 Column {
-                    id: column; spacing: 6
-
-                    property real h: ((box.height - 72) / 6) - ((spacing * (6 - 1)) / 6)
-                    property real w: (box.width / 4) - ((spacing * (4 - 1)) / 4)
-
-                    Row {
-                        spacing: 6
-
-                        CalcButton { width: column.w; height: column.h; color: 'purple'; operation: leftArrow }
-                        CalcButton { width: column.w; height: column.h; color: 'purple'; operation: qsTr("C") }
-                        CalcButton { width: column.w; height: column.h; color: 'purple'; operation: qsTr("AC") }
+                    id: box; spacing: 8
+                    anchors {
+                        top: parent.top
+                        bottom: parent.bottom
+                        bottomMargin: 6
+                        left: parent.left
+                        leftMargin: 6
+                        right: parent.right
+                        rightMargin: 6
                     }
 
                     Row {
-                        spacing: 6
+                        Display { id: display; width: box.width; height: 64 }
+                    }
+
+                    Column {
+                        id: column; spacing: 6
+
+                        property real h: ((box.height - 72) / 6) - ((spacing * (6 - 1)) / 6)
                         property real w: (box.width / 4) - ((spacing * (4 - 1)) / 4)
 
-                        CalcButton { width: column.w; height: column.h; color: 'green'; operation: qsTr("mc") }
-                        CalcButton { width: column.w; height: column.h; color: 'green'; operation: qsTr("m+") }
-                        CalcButton { width: column.w; height: column.h; color: 'green'; operation: qsTr("m-") }
-                        CalcButton { width: column.w; height: column.h; color: 'green'; operation: qsTr("mr") }
-                    }
+                        Row {
+                            spacing: 6
 
-                    Grid {
-                        id: grid; rows: 4; columns: 5; spacing: 6
+                            CalcButton { width: column.w; height: column.h; color: 'purple'; operation: leftArrow }
+                            CalcButton { width: column.w; height: column.h; color: 'purple'; operation: qsTr("C") }
+                            CalcButton { width: column.w; height: column.h; color: 'purple'; operation: qsTr("AC") }
+                        }
 
-                        property real w: (box.width / columns) - ((spacing * (columns - 1)) / columns)
+                        Row {
+                            spacing: 6
+                            property real w: (box.width / 4) - ((spacing * (4 - 1)) / 4)
 
-                        CalcButton { width: grid.w; height: column.h; operation: "7"; color: 'blue' }
-                        CalcButton { width: grid.w; height: column.h; operation: "8"; color: 'blue' }
-                        CalcButton { width: grid.w; height: column.h; operation: "9"; color: 'blue' }
-                        CalcButton { width: grid.w; height: column.h; operation: division }
-                        CalcButton { width: grid.w; height: column.h; operation: squareRoot }
-                        CalcButton { width: grid.w; height: column.h; operation: "4"; color: 'blue' }
-                        CalcButton { width: grid.w; height: column.h; operation: "5"; color: 'blue' }
-                        CalcButton { width: grid.w; height: column.h; operation: "6"; color: 'blue' }
-                        CalcButton { width: grid.w; height: column.h; operation: multiplication }
-                        CalcButton { width: grid.w; height: column.h; operation: "x^2" }
-                        CalcButton { width: grid.w; height: column.h; operation: "1"; color: 'blue' }
-                        CalcButton { width: grid.w; height: column.h; operation: "2"; color: 'blue' }
-                        CalcButton { width: grid.w; height: column.h; operation: "3"; color: 'blue' }
-                        CalcButton { width: grid.w; height: column.h; operation: "-" }
-                        CalcButton { width: grid.w; height: column.h; operation: "1/x" }
-                        CalcButton { width: grid.w; height: column.h; operation: "0"; color: 'blue' }
-                        CalcButton { width: grid.w; height: column.h; operation: localeHelper.decimalPoint() }
-                        CalcButton { width: grid.w; height: column.h; operation: plusminus }
-                        CalcButton { width: grid.w; height: column.h; operation: "+" }
-                        CalcButton { width: grid.w; height: column.h; operation: "="; color: 'red' }
+                            CalcButton { width: column.w; height: column.h; color: 'green'; operation: qsTr("mc") }
+                            CalcButton { width: column.w; height: column.h; color: 'green'; operation: qsTr("m+") }
+                            CalcButton { width: column.w; height: column.h; color: 'green'; operation: qsTr("m-") }
+                            CalcButton { width: column.w; height: column.h; color: 'green'; operation: qsTr("mr") }
+                        }
+
+                        Grid {
+                            id: grid; rows: 4; columns: 5; spacing: 6
+
+                            property real w: (box.width / columns) - ((spacing * (columns - 1)) / columns)
+
+                            CalcButton { width: grid.w; height: column.h; operation: "7"; color: 'blue' }
+                            CalcButton { width: grid.w; height: column.h; operation: "8"; color: 'blue' }
+                            CalcButton { width: grid.w; height: column.h; operation: "9"; color: 'blue' }
+                            CalcButton { width: grid.w; height: column.h; operation: division }
+                            CalcButton { width: grid.w; height: column.h; operation: squareRoot }
+                            CalcButton { width: grid.w; height: column.h; operation: "4"; color: 'blue' }
+                            CalcButton { width: grid.w; height: column.h; operation: "5"; color: 'blue' }
+                            CalcButton { width: grid.w; height: column.h; operation: "6"; color: 'blue' }
+                            CalcButton { width: grid.w; height: column.h; operation: multiplication }
+                            CalcButton { width: grid.w; height: column.h; operation: "x^2" }
+                            CalcButton { width: grid.w; height: column.h; operation: "1"; color: 'blue' }
+                            CalcButton { width: grid.w; height: column.h; operation: "2"; color: 'blue' }
+                            CalcButton { width: grid.w; height: column.h; operation: "3"; color: 'blue' }
+                            CalcButton { width: grid.w; height: column.h; operation: "-" }
+                            CalcButton { width: grid.w; height: column.h; operation: "1/x" }
+                            CalcButton { width: grid.w; height: column.h; operation: "0"; color: 'blue' }
+                            CalcButton { width: grid.w; height: column.h; operation: localeHelper.decimalPoint() }
+                            CalcButton { width: grid.w; height: column.h; operation: plusminus }
+                            CalcButton { width: grid.w; height: column.h; operation: "+" }
+                            CalcButton { width: grid.w; height: column.h; operation: "="; color: 'red' }
+                        }
                     }
                 }
             }
-        }
         }
     }
 }
