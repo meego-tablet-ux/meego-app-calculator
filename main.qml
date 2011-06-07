@@ -48,7 +48,28 @@ Window {
         }
     ]
 
+    SaveRestoreState {
+      id: calcState
+      onSaveRequired: {
+        setValue("memory", CalcEngine.memory)
+	setValue("curVal", CalcEngine.curVal)
+	setValue("lastOp", CalcEngine.lastOp)
+	setValue("timer", CalcEngine.timer)
+	setValue("errorFlag", CalcEngine.errorFlag)
+	setValue("displayText", display.text)
+	setValue("displayCurrentOperation", display.currentOperation.text)
+	sync()
+      }
+    }
+
     Component.onCompleted: {
+	if (calcState.restoreRequired) {
+	  CalcEngine.memory = calcState.value("memory", 0)
+	  CalcEngine.curVal = calcState.value("curVal", 0)
+	  CalcEngine.lastOp = calcState.value("lastOp", "")
+	  CalcEngine.timer = calcState.value("timer", 0)
+	  CalcEngine.errorFlag = calcState.value("errorFlag", false)
+	}
         switchBook(page)
     }
 
@@ -61,7 +82,11 @@ Window {
             id: main
             anchors.fill: parent
 
-            Component.onCompleted: window.display = display
+            Component.onCompleted: {
+	        window.display = display
+		display.text = calcState.value("displayText", "")
+		display.currentOperation.text = calcState.value("displayCurrentOperation", "")
+	      }
             Column {
                 id: box; spacing: 8
                 anchors {
