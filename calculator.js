@@ -96,12 +96,14 @@ function doInputOperation(op) {
             else if (display.text != "0")
                 display.text = "-" + display.text
         }
-    } else if (op == leftArrow && (isDigitOrDecimalPoint(lastOp) || lastOp == plusminus)) {  // allow to edit the number if the last operation
-        var length = display.text.toString().length                                          // is a digit, +/- or the decimal point only
-        if (length == 1 || length == 2 && display.text.toString().charAt(0) == '-' || display.text == ("-0" + localeHelper.decimalPoint())) {
-            display.text = "0"
-        } else {
-            display.text = display.text.toString().slice(0, -1)
+    } else if (op == leftArrow) {
+        if (isDigitOrDecimalPoint(lastOp) || lastOp == plusminus) {  // allow to edit the number if the last operation
+            var length = display.text.toString().length              // is a digit, +/- or the decimal point only
+            if (length == 1 || length == 2 && display.text.toString().charAt(0) == '-' || display.text == ("-0" + localeHelper.decimalPoint())) {
+                display.text = "0"
+            } else {
+                display.text = display.text.toString().slice(0, -1)
+            }
         }
     } else {
         ok = false
