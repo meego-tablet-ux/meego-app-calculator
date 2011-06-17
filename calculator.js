@@ -29,7 +29,7 @@ var timer = 0
 var errorFlag = false
 
 function isDigitOrDecimalPoint(str) {
-    return (str.toString().length == 1 && ((str >= "0" && str <= "9") || str == localeHelper.decimalPoint()))
+    return (str.toString().length == 1 && ((str >= "0" && str <= "9") || str == localeHelper.decimalPoint))
 }
 
 function indexOfArithmeticOperation(op) {
@@ -38,7 +38,7 @@ function indexOfArithmeticOperation(op) {
 }
 
 function disabled(op) {
-    if (op == localeHelper.decimalPoint() && display.text.toString().search("\\" + localeHelper.decimalPoint()) != -1) {
+    if (op == localeHelper.decimalPoint && display.text.toString().search("\\" + localeHelper.decimalPoint) != -1) {
         // if we're starting a new number, allow it
         if (isDigitOrDecimalPoint(lastOp)) {
             return true
@@ -64,7 +64,7 @@ function correctText() {
         //: Calculator error for illegal calculation (e.g. square root of negative number)
         display.text = qsTr("Error")
     } else {
-        display.text = display.text.replace(".", localeHelper.decimalPoint())
+        display.text = display.text.replace(".", localeHelper.decimalPoint)
         errorFlag = false
     }
     if (errorFlag)
@@ -80,9 +80,9 @@ function doInputOperation(op) {
             if (display.text.toString().length >= 14)
                 return ok;
 
-            display.text = (display.text == "0" && op != localeHelper.decimalPoint() ? op : display.text + op.toString())
+            display.text = (display.text == "0" && op != localeHelper.decimalPoint ? op : display.text + op.toString())
         } else {
-            display.text = (op == localeHelper.decimalPoint() ? "0":"") + op
+            display.text = (op == localeHelper.decimalPoint ? "0":"") + op
         }
         lastOp = op
         correctText()
@@ -99,7 +99,7 @@ function doInputOperation(op) {
     } else if (op == leftArrow) {
         if (isDigitOrDecimalPoint(lastOp) || lastOp == plusminus) {  // allow to edit the number if the last operation
             var length = display.text.toString().length              // is a digit, +/- or the decimal point only
-            if (length == 1 || length == 2 && display.text.toString().charAt(0) == '-' || display.text == ("-0" + localeHelper.decimalPoint())) {
+            if (length == 1 || length == 2 && display.text.toString().charAt(0) == '-' || display.text == ("-0" + localeHelper.decimalPoint)) {
                 display.text = "0"
             } else {
                 display.text = display.text.toString().slice(0, -1)
@@ -208,7 +208,7 @@ function doOperation(op) {
         errorFlag = false
 
     if (!doInputOperation(op)) {
-        display.text = display.text.replace(localeHelper.decimalPoint(), ".")               // Prepare for calculation
+        display.text = display.text.replace(localeHelper.decimalPoint, ".")               // Prepare for calculation
         if (!doSingleOperation(op) && !doMemoryOperation(op) && !doDoubleOperation(op)) {
             if (op == rotateLeft) {
                 main.state = 'rotated'

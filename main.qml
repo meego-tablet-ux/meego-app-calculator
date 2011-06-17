@@ -149,7 +149,7 @@ Window {
                             CalcButton { width: grid.w; height: column.h; operation: "-" }
                             CalcButton { width: grid.w; height: column.h; operation: "1/x" }
                             CalcButton { width: grid.w; height: column.h; operation: "0"; color: 'blue' }
-                            CalcButton { width: grid.w; height: column.h; operation: localeHelper.decimalPoint() }
+                            CalcButton { width: grid.w; height: column.h; operation: localeHelper.decimalPoint }
                             CalcButton { width: grid.w; height: column.h; operation: plusminus }
                             CalcButton { width: grid.w; height: column.h; operation: "+" }
                             CalcButton { width: grid.w; height: column.h; operation: "="; color: 'red' }
