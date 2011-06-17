@@ -54,10 +54,14 @@ function correctText() {
     errorFlag = true
     // correct the output to i18nable string when text
     if ((display.text == "Infinity") || (display.text == "inf")) {
+        //: Calculator error reporting positive infinity result (positive overflow)
+        //:   See http://www.w3schools.com/jsref/jsref_infinity.asp
         display.text = qsTr("Infinity")
     } else if (display.text == "-Infinity") {
+        //: Calculator error reporting negative infinity result (negative overflow)
         display.text = qsTr("-Infinity")
     } else if ((display.text == "NaN") || (display.text == "nan")) {
+        //: Calculator error for illegal calculation (e.g. square root of negative number)
         display.text = qsTr("Error")
     } else {
         display.text = display.text.replace(".", localeHelper.decimalPoint())
