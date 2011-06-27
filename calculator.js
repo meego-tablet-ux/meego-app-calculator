@@ -44,7 +44,7 @@ function disabled(op) {
             return true
         }
     } else if (errorFlag) {
-        if (op != "C" && op != "AC") // The display should stay at "Infinity" unless C or AC is pressed
+        if (op != qsTr("C") && op != qsTr("AC")) // The display should stay at "Infinity" unless C or AC is pressed
             return true
     }
     return false
