@@ -5,7 +5,10 @@ TEMPLATE = subdirs
 qmlfiles.files += *.qml *.js images/ 
 qmlfiles.path += $$INSTALL_ROOT/usr/share/$$TARGET
 
-INSTALLS += qmlfiles
+desktop.files += meego-app-calculator.desktop
+desktop.path += $$INSTALL_ROOT/usr/share/applications/
+
+INSTALLS += qmlfiles desktop
 
 TRANSLATIONS += *.qml *.js 
 PROJECT_NAME = meego-app-calculator
